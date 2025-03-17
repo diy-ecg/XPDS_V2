@@ -1,0 +1,41 @@
+
+sudo apt install --reinstall raspberrypi-kernel-headers
+
+# Install dependencies
+sudo apt update
+sudo apt install dkms git build-essential linux-headers-$(uname -r)
+
+# Clone the driver repository
+git clone https://github.com/quickreflex/rtl8188eus.git
+cd rtl8188eus
+
+# Register with DKMS
+sudo dkms add .
+
+sudo dkms build -m realtek-rtl8188eus -v 5.3.9~20221105
+sudo dkms install -m realtek-rtl8188eus -v 5.3.9~20221105
+
+# Blacklist conflicting drivers
+echo "blacklist r8188eu" | sudo tee -a /etc/modprobe.d/realtek_blacklist.conf
+echo "blacklist rtl8xxxu" | sudo tee -a /etc/modprobe.d/realtek_blacklist.conf
+
+# Reboot to apply changes
+
+sudo modprobe 8188eu
+
+sudo reboot
+
+ip -a >> WLAN1 : 10.42.0.1 
+# Address Resolution Table
+arp -a >> ESP8266: 10.42.0.167
+
+nmcli connection show
+Raspi-Wifi-2.4  d551c6cc-eab9-43a2-86ad-a854a1c9124d  wifi      wlan1  
+eduroam         c82c4f2e-34e3-4d1d-9d69-7a7f4b74e9da  wifi      wlan0  
+
+nmcli connection modify "Raspi-Wifi-2.4" ipv4.addresses 10.42.0.1/24
+nmcli connection modify "Raspi-Wifi-2.4" ipv4.method shared
+nmcli connection up "Raspi-Wifi-2.4"
+
+
+
