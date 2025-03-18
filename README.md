@@ -1,3 +1,4 @@
 # XPortDataStreamer
-Derivative of SerialPortDataStreamer with additional capability to communicate via WLAN UDP protocol
+GNU Octave script collection to communicate via WLAN UDP protocol with a microcontroller and to process and visualize transmitted data.  
+Main script is 
 
